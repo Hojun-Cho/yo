@@ -309,5 +309,10 @@ void Biofn(Biobuf *, int (*)(Biobuf *, void *, long));
  */
 typedef struct Lock
 {
-    int val;
+    int init;
+    pthread_mutex_t mutex;
+    int held;
 } Lock;
+void lock(Lock *);
+int canlock(Lock *);
+void unlock(Lock *);
