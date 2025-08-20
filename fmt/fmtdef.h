@@ -6,20 +6,16 @@
  * it should reset the buffer and return whether formatting should continue.
  */
 
-#define USED(x) \
-  if (x)        \
-    ;           \
-  else
-
 typedef int (*Fmts)(Fmt *);
 
 typedef struct Quoteinfo Quoteinfo;
-struct Quoteinfo {
-  int quoted;    /* if set, string must be quoted */
-  int nrunesin;  /* number of input runes that can be accepted */
-  int nbytesin;  /* number of input bytes that can be accepted */
-  int nrunesout; /* number of runes that will be generated */
-  int nbytesout; /* number of bytes that will be generated */
+struct Quoteinfo
+{
+    int quoted;    /* if set, string must be quoted */
+    int nrunesin;  /* number of input runes that can be accepted */
+    int nbytesin;  /* number of input bytes that can be accepted */
+    int nrunesout; /* number of runes that will be generated */
+    int nbytesout; /* number of bytes that will be generated */
 };
 
 void *_fmtflush(Fmt *, void *, int);
@@ -45,45 +41,52 @@ int _fmtrcpy(Fmt *, void *, int n);
 void _fmtlock(void);
 void _fmtunlock(void);
 
-#define FMTCHAR(f, t, s, c)   \
-  do {                        \
-    if (t + 1 > (char *)s) {  \
-      t = _fmtflush(f, t, 1); \
-      if (t != nil)           \
-        s = f->stop;          \
-      else                    \
-        return -1;            \
-    }                         \
-    *t++ = c;                 \
-  } while (0)
+#define FMTCHAR(f, t, s, c)                                                                                            \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        if (t + 1 > (char *)s)                                                                                         \
+        {                                                                                                              \
+            t = _fmtflush(f, t, 1);                                                                                    \
+            if (t != nil)                                                                                              \
+                s = f->stop;                                                                                           \
+            else                                                                                                       \
+                return -1;                                                                                             \
+        }                                                                                                              \
+        *t++ = c;                                                                                                      \
+    } while (0)
 
-#define FMTRCHAR(f, t, s, c)             \
-  do {                                   \
-    if (t + 1 > (Rune *)s) {             \
-      t = _fmtflush(f, t, sizeof(Rune)); \
-      if (t != nil)                      \
-        s = f->stop;                     \
-      else                               \
-        return -1;                       \
-    }                                    \
-    *t++ = c;                            \
-  } while (0)
+#define FMTRCHAR(f, t, s, c)                                                                                           \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        if (t + 1 > (Rune *)s)                                                                                         \
+        {                                                                                                              \
+            t = _fmtflush(f, t, sizeof(Rune));                                                                         \
+            if (t != nil)                                                                                              \
+                s = f->stop;                                                                                           \
+            else                                                                                                       \
+                return -1;                                                                                             \
+        }                                                                                                              \
+        *t++ = c;                                                                                                      \
+    } while (0)
 
-#define FMTRUNE(f, t, s, r)                                                  \
-  do {                                                                       \
-    Rune _rune;                                                              \
-    int _runelen;                                                            \
-    if (t + UTFmax > (char *)s && t + (_runelen = runelen(r)) > (char *)s) { \
-      t = _fmtflush(f, t, _runelen);                                         \
-      if (t != nil)                                                          \
-        s = f->stop;                                                         \
-      else                                                                   \
-        return -1;                                                           \
-    }                                                                        \
-    if (r < Runeself)                                                        \
-      *t++ = r;                                                              \
-    else {                                                                   \
-      _rune = r;                                                             \
-      t += runetochar(t, &_rune);                                            \
-    }                                                                        \
-  } while (0)
+#define FMTRUNE(f, t, s, r)                                                                                            \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        Rune _rune;                                                                                                    \
+        int _runelen;                                                                                                  \
+        if (t + UTFmax > (char *)s && t + (_runelen = runelen(r)) > (char *)s)                                         \
+        {                                                                                                              \
+            t = _fmtflush(f, t, _runelen);                                                                             \
+            if (t != nil)                                                                                              \
+                s = f->stop;                                                                                           \
+            else                                                                                                       \
+                return -1;                                                                                             \
+        }                                                                                                              \
+        if (r < Runeself)                                                                                              \
+            *t++ = r;                                                                                                  \
+        else                                                                                                           \
+        {                                                                                                              \
+            _rune = r;                                                                                                 \
+            t += runetochar(t, &_rune);                                                                                \
+        }                                                                                                              \
+    } while (0)

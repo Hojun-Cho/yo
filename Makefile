@@ -11,16 +11,19 @@ LIB = lib9.a
 # Source directories
 FMT_DIR = fmt
 UTF_DIR = utf
+BIO_DIR = bio
 
 # Source files
 FMT_SRCS = $(wildcard $(FMT_DIR)/*.c)
 UTF_SRCS = $(wildcard $(UTF_DIR)/*.c)
-SRCS = $(FMT_SRCS) $(UTF_SRCS)
+BIO_SRCS = $(wildcard $(BIO_DIR)/*.c)
+SRCS = $(FMT_SRCS) $(UTF_SRCS) $(BIO_SRCS)
 
 # Object files
 FMT_OBJS = $(FMT_SRCS:.c=.o)
 UTF_OBJS = $(UTF_SRCS:.c=.o)
-OBJS = $(FMT_OBJS) $(UTF_OBJS)
+BIO_OBJS = $(BIO_SRCS:.c=.o)
+OBJS = $(FMT_OBJS) $(UTF_OBJS) $(BIO_OBJS)
 
 # Default target
 all: $(LIB)

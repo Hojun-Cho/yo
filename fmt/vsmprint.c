@@ -1,5 +1,3 @@
-#include <stdlib.h>
-
 #include "9.h"
 #include "fmtdef.h"
 
